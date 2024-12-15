@@ -16,6 +16,7 @@ def extract_model_from_notebook(notebook_path):
         
         # Convert notebook into Python code
         exporter = PythonExporter()
+        
         python_code, _ = exporter.from_notebook_node(notebook_content)
 
         # Save Python code to a temporary file
