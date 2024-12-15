@@ -8,6 +8,13 @@ import os
 MODEL_PATH = "skin_cancer_model.h5"  # Ensure the file is in the same directory or provide the correct path
 model = load_model(MODEL_PATH)
 
+try:
+    model = load_model(MODEL_PATH)
+    st.success("Model loaded successfully!")
+except Exception as e:
+    st.error(f"Error loading model: {e}")
+    st.stop()
+
 # Define class labels
 class_labels = ['Benign', 'Malignant']
 
