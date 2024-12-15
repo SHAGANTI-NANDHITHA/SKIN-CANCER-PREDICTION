@@ -16,7 +16,6 @@ def extract_model_from_notebook(notebook_path):
         
         # Convert notebook into Python code
         exporter = PythonExporter()
-        
         python_code, _ = exporter.from_notebook_node(notebook_content)
 
         # Save Python code to a temporary file
@@ -26,6 +25,9 @@ def extract_model_from_notebook(notebook_path):
         
         # Execute the Python script to load the model and save it
         exec(open(temp_script_path).read())
+
+        # Cleanup temporary file after execution
+        os.remove(temp_script_path)
 
         # Return the path to the saved model (ensure you save the model as 'skin_cancer_model.h5' in the notebook)
         return "skin_cancer_model.h5"
