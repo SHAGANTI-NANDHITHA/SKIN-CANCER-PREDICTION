@@ -5,7 +5,7 @@ import numpy as np
 import os
 
 # Load the model
-MODEL_PATH = "skin_cancer_model.h5"  # Ensure the file is in the same directory or provide the correct path
+MODEL_PATH = "Skin_cancer_(CNN).ipynb"  # Ensure the file is in the same directory or provide the correct path
 model = load_model(MODEL_PATH)
 
 try:
