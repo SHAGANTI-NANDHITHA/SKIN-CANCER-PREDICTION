@@ -5,13 +5,24 @@ import numpy as np
 import os
 import requests
 import tensorflow as tf  # Import TensorFlow
-from io import BytesIO
+import tempfile
 
 # Function to download the model file from Google Drive
 def download_model():
     model_url = "https://drive.google.com/uc?id=1UumJIfM8xtDzKUTLKNE6drHlVnaboUAu"
     response = requests.get(model_url)
-    model = tf.keras.models.load_model(BytesIO(response.content))
+
+    # Save the downloaded content to a temporary file
+    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+        tmp_file.write(response.content)
+        tmp_file_path = tmp_file.name
+
+    # Load the model from the temporary file
+    model = tf.keras.models.load_model(tmp_file_path)
+
+    # Optionally, delete the temp file after loading the model
+    os.remove(tmp_file_path)
+
     return model
 
 # Load the model
