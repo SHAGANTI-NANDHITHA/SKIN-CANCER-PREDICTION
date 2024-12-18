@@ -3,10 +3,22 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array, load_img
 import numpy as np
 import os
+import requests
 
-# Load the model
-MODEL_PATH = "skin_cancer_model.h5"  # Ensure the file is in the same directory or provide the correct path
-model = load_model(MODEL_PATH)
+def load_model_from_drive():
+    # Direct link to the model file
+    url = "https://drive.google.com/uc?id=1Abc123Xyz"
+    
+    # Download the model file
+    response = requests.get(url, stream=True)
+    with open("skin_cancer_model.h5", "wb") as f:
+        for chunk in response.iter_content(chunk_size=1024):
+            if chunk:
+                f.write(chunk)
+    
+    # Load the model
+    model = tensorflow.keras.models.load_model("skin_cancer_model.h5")
+    return model
 
 # Define class labels
 class_labels = ['Benign', 'Malignant']
