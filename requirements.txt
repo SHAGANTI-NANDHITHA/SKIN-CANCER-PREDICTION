@@ -31,7 +31,7 @@ jsonschema-specifications==2024.10.1
 jupyter_client==8.6.3
 jupyter_core==5.7.2
 jupyterlab_pygments==0.3.0
-keras==2.15.0
+keras==3.7.0
 libclang==18.1.1
 Markdown==3.7
 markdown-it-py==3.0.0
