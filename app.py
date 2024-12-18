@@ -1,32 +1,38 @@
 import streamlit as st
 import tensorflow as tf
-from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array, load_img
 import numpy as np
 import os
 import requests
 
-# Load model from Google Drive
-@st.cache_resource  # Cache the model to avoid re-downloading
+# Function to download the model file from Google Drive
+@st.cache_resource
 def load_model_from_drive():
     try:
-        # Direct download link to the model file
+        # Direct download link
         url = "https://drive.google.com/uc?id=1ZuZCCybYsXt4c1F1WYNjuG0cszeGp3UA"
-        
-        # Download the model file
-        response = requests.get(url, stream=True)
-        if response.status_code != 200:
-            st.error("Failed to download the model. Please check the link.")
-            return None
-        
-        with open("skin_cancer_model.h5", "wb") as f:
-            for chunk in response.iter_content(chunk_size=1024):
-                if chunk:
-                    f.write(chunk)
-        
+        model_path = "skin_cancer_model.h5"
+
+        # Check if the model is already downloaded
+        if not os.path.exists(model_path):
+            # Download the model file
+            st.info("Downloading the model file. Please wait...")
+            response = requests.get(url, stream=True)
+            if response.status_code != 200:
+                st.error("Failed to download the model. Please check the link.")
+                return None
+
+            # Save the downloaded model file
+            with open(model_path, "wb") as f:
+                for chunk in response.iter_content(chunk_size=1024):
+                    if chunk:
+                        f.write(chunk)
+
         # Load the model
-        model = tf.keras.models.load_model("skin_cancer_model.h5")
+        model = tf.keras.models.load_model(model_path)
+        st.success("Model loaded successfully!")
         return model
+
     except Exception as e:
         st.error(f"Error loading model: {e}")
         return None
@@ -51,20 +57,22 @@ if uploaded_file is not None:
         temp_file_path = "temp_image.jpg"
         with open(temp_file_path, "wb") as f:
             f.write(uploaded_file.getbuffer())
-        
+
         # Load and preprocess the image
         image = load_img(temp_file_path, target_size=(150, 150))
         image_array = img_to_array(image) / 255.0  # Normalize
         image_array = np.expand_dims(image_array, axis=0)
-        
+
         # Predict
         if model:
+            st.image(image, caption="Uploaded Image", use_column_width=True)
+            st.write("Classifying...")
+
             prediction = model.predict(image_array)
             class_idx = int(prediction[0] > 0.5)  # Binary classification
             class_label = class_labels[class_idx]
-            
-            # Show the image and prediction
-            st.image(image, caption="Uploaded Image", use_column_width=True)
+
+            # Display result
             st.write(f"### Prediction: {class_label}")
         else:
             st.error("Model could not be loaded. Please try again.")
