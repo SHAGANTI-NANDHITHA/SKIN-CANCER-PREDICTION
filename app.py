@@ -6,10 +6,11 @@ import os
 import requests
 
 # Function to download the model file from Google Drive
+# Function to download the model file from Google Drive
 @st.cache_resource
 def load_model_from_drive():
     try:
-        # Direct download link
+        # Correct direct download link
         url = "https://drive.google.com/uc?id=1ZuZCCybYsXt4c1F1WYNjuG0cszeGp3UA"
         model_path = "skin_cancer_model.h5"
 
