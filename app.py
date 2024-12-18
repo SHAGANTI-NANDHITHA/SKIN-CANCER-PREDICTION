@@ -6,19 +6,28 @@ import os
 import requests
 
 def load_model_from_drive():
-    # Direct link to the model file
-    url = "https://drive.google.com/file/d/1UumJIfM8xtDzKUTLKNE6drHlVnaboUAu/view?usp=share_link"
-    
-    # Download the model file
-    response = requests.get(url, stream=True)
-    with open("skin_cancer_model.h5", "wb") as f:
-        for chunk in response.iter_content(chunk_size=1024):
-            if chunk:
-                f.write(chunk)
-    
-    # Load the model
-    model = tensorflow.keras.models.load_model("skin_cancer_model.h5")
-    return model
+    try:
+        # Direct download link to the model file
+        url = "https://drive.google.com/uc?id=1ZuZCCybYsXt4c1F1WYNjuG0cszeGp3UA"
+        
+        # Download the model file
+        response = requests.get(url, stream=True)
+        if response.status_code != 200:
+            st.error("Failed to download the model. Please check the link.")
+            return None
+        
+        with open("skin_cancer_model.h5", "wb") as f:
+            for chunk in response.iter_content(chunk_size=1024):
+                if chunk:
+                    f.write(chunk)
+        
+        # Load the model
+        model = tensorflow.keras.models.load_model("skin_cancer_model.h5")
+        return model
+    except Exception as e:
+        st.error(f"Error loading model: {e}")
+        return None
+
 
 # Define class labels
 class_labels = ['Benign', 'Malignant']
