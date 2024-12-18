@@ -7,7 +7,7 @@ import requests
 
 def load_model_from_drive():
     # Direct link to the model file
-    url = "https://drive.google.com/uc?id=1Abc123Xyz"
+    url = "https://drive.google.com/file/d/1UumJIfM8xtDzKUTLKNE6drHlVnaboUAu/view?usp=share_link"
     
     # Download the model file
     response = requests.get(url, stream=True)
